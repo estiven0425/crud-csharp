@@ -19,7 +19,7 @@ public class Author
     public int Age
     {
         get => _age;
-        set => _age = ValidationHelper.IsInvalidAge(value)
+        set => _age = ValidationHelper.IsInvalidNumber(value)
             ? throw new ArgumentOutOfRangeException(nameof(Age), "Age cannot be negative or 0")
             : _age = value;
     }

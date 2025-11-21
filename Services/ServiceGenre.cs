@@ -22,6 +22,11 @@ public class ServiceGenre
         return _dbContext.Genres.FirstOrDefault(genre => genre.Id == id);
     }
 
+    public Genre? GetGenreByName(string name)
+    {
+        return _dbContext.Genres.FirstOrDefault(genre => genre.Name == name);
+    }
+
     public Genre AddGenre(Genre genre)
     {
         Genre newGenre = _dbContext.Genres.Add(genre).Entity;
@@ -69,12 +74,5 @@ public class ServiceGenre
         }
 
         return deletedGenre;
-    }
-
-    public int? GetCountBooksGenre(Genre genre)
-    {
-        Genre? genreToOperate = GetGenreById(genre.Id);
-
-        return genreToOperate?.CountBooks();
     }
 }

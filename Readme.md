@@ -12,7 +12,7 @@ Contiene las clases que representan las entidades del dominio. Por ejemplo, `Boo
 
 ### `/Data`
 
-Incluye la configuración de la base de datos (SQLite), el `DbContext` y cualquier archivo relacionado con la persistencia. Aquí se define cómo se conectan los modelos con la base de datos.
+Incluye la configuración de la base de datos (SQLite), él `DbContext` y cualquier archivo relacionado con la persistencia. Aquí se define cómo se conectan los modelos con la base de datos.
 
 ### `/Services`
 
@@ -68,7 +68,7 @@ Contiene la lógica de interacción de la ventana principal. Hereda de `Window` 
 
 A medida que se desarrollen nuevas funcionalidades, se agregarán más archivos en las carpetas correspondientes. Cada archivo nuevo debe documentarse brevemente aquí para mantener claridad en la arquitectura.
 
-### 🗂️/Models
+### 🗂️ /Models
 
 #### `Book.cs`
 
@@ -100,31 +100,32 @@ La clase incluye un constructor vacío para compatibilidad con Entity Framework 
 
 Clase ubicada en `/Data` que hereda de `DbContext`. Define los `DbSet` para `Book`, `Author` y `Genre`, configura las relaciones entre entidades y establece datos iniciales (`HasData`) como el autor y género `"Unknow"`. También define la cadena de conexión a SQLite (`UseSqlite`) apuntando a `./db/crud_csharp.db`.
 
-### 🗂️ / Services
+### 🗂️ /Services
 
 #### `ServiceBook.cs`
 
 Esta clase encapsula toda la lógica de acceso y manipulación de entidades `Book` dentro del sistema. Opera como intermediario entre el `ViewModel` y la base de datos, garantizando una arquitectura limpia, validaciones seguras y separación de responsabilidades.
 
-#### 🧱 Dependencias
+##### 🧱 Dependencias
 - `AppDbContext`: contexto de Entity Framework para acceder a la base de datos.
 - Modelos: `Book`, `Author`, `Genre`.
 
-#### 🔧 Métodos públicos
+##### 🔧 Métodos públicos
 
-| Método | Descripción |
-|--------|-------------|
-| `List<Book> GetAllBooks()` | Devuelve todos los libros, incluyendo sus autores y géneros relacionados. |
-| `Book? GetBookById(int id)` | Busca un libro por su ID, incluyendo relaciones. Devuelve `null` si no existe. |
-| `Book AddBook(Book book)` | Agrega un nuevo libro a la base de datos y lo retorna con su ID asignado. |
-| `Book? UpdateBook(Book book)` | Actualiza un libro existente si se encuentra en la base. Devuelve el libro actualizado o `null`. |
-| `Book? DeleteBook(Book book)` | Elimina un libro si existe. Devuelve el libro eliminado o `null`. |
-| `Book? RestockBook(Book book, int amount)` | Aumenta el stock del libro usando el método `Restock` del modelo. |
-| `Book? SellBook(Book book, int amount)` | Disminuye el stock del libro usando el método `Sell`. Lanza excepción si no hay stock suficiente. |
-| `Book? ChangeAuthorBook(Book book, Author author)` | Cambia el autor del libro usando el método `ChangeAuthor`. |
-| `Book? ChangeGenreBook(Book book, Genre genre)` | Cambia el género del libro usando el método `ChangeGenre`. |
+| Método                                             | Descripción                                                                                       |
+|----------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| `List<Book> GetAllBooks()`                         | Devuelve todos los libros, incluyendo sus autores y géneros relacionados.                         |
+| `Book? GetBookById(int id)`                        | Busca un libro por su ID, incluyendo relaciones. Devuelve `null` si no existe.                    |
+| `Book? GetBookByTitle(string title)`               | Busca un libro por su título, incluyendo relaciones. Devuelve `null` si no existe.                |
+| `Book AddBook(Book book)`                          | Agrega un nuevo libro a la base de datos y lo retorna con su ID asignado.                         |
+| `Book? UpdateBook(Book book)`                      | Actualiza un libro existente si se encuentra en la base. Devuelve el libro actualizado o `null`.  |
+| `Book? DeleteBook(Book book)`                      | Elimina un libro si existe. Devuelve el libro eliminado o `null`.                                 |
+| `Book? RestockBook(Book book, int amount)`         | Aumenta el stock del libro usando el método `Restock` del modelo.                                 |
+| `Book? SellBook(Book book, int amount)`            | Disminuye el stock del libro usando el método `Sell`. Lanza excepción si no hay stock suficiente. |
+| `Book? ChangeAuthorBook(Book book, Author author)` | Cambia el autor del libro usando el método `ChangeAuthor`.                                        |
+| `Book? ChangeGenreBook(Book book, Genre genre)`    | Cambia el género del libro usando el método `ChangeGenre`.                                        |
 
-#### 🧠 Consideraciones arquitectónicas
+##### 🧠 Consideraciones arquitectónicas
 
 - **Validación de existencia**: Todos los métodos que modifican o eliminan primero validan que el libro exista usando `GetBookById`.
 - **Encapsulamiento de lógica**: Métodos como `Sell`, `Restock`, `ChangeAuthor` y `ChangeGenre` se delegan al modelo `Book`, manteniendo la lógica de negocio centralizada.
@@ -134,22 +135,23 @@ Esta clase encapsula toda la lógica de acceso y manipulación de entidades `Boo
 
 Esta clase gestiona todas las operaciones relacionadas con la entidad `Author`, incluyendo creación, consulta, actualización, eliminación y obtención de información. También implementa una lógica especial para reasignar los libros de un autor eliminado al autor por defecto `"Unknown"`.
 
-#### 🧱 Dependencias
+##### 🧱 Dependencias
 - `AppDbContext`: contexto de Entity Framework para acceder a la base de datos.
 - Modelo: `Author`, `Book`.
 
-#### 🔧 Métodos públicos
+##### 🔧 Métodos públicos
 
-| Método | Descripción |
-|--------|-------------|
-| `List<Author> GetAllAuthors()` | Devuelve todos los autores registrados en la base de datos. |
-| `Author? GetAuthorById(int id)` | Busca un autor por su ID. Devuelve `null` si no existe. |
-| `Author AddAuthor(Author author)` | Agrega un nuevo autor a la base de datos y lo retorna con su ID asignado. |
-| `Author? UpdateAuthor(Author author)` | Actualiza un autor existente si se encuentra en la base. Devuelve el autor actualizado o `null`. |
-| `Author? DeleteAuthor(Author author)` | Elimina un autor si existe. Antes de eliminarlo, reasigna todos sus libros al autor `"Unknown"` (ID = 1). Devuelve el autor eliminado o `null`. |
-| `string? GetInfoAuthor(Author author)` | Devuelve un resumen de la información del autor usando el método `GetInfo()` del modelo. |
+| Método                                 | Descripción                                                                                                                                     |
+|----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| `List<Author> GetAllAuthors()`         | Devuelve todos los autores registrados en la base de datos.                                                                                     |
+| `Author? GetAuthorById(int id)`        | Busca un autor por su ID. Devuelve `null` si no existe.                                                                                         |
+| `Author? GetAuthorByName(string name)` | Busca un autor por su nombre. Devuelve `null` si no existe.                                                                                     |
+| `Author AddAuthor(Author author)`      | Agrega un nuevo autor a la base de datos y lo retorna con su ID asignado.                                                                       |
+| `Author? UpdateAuthor(Author author)`  | Actualiza un autor existente si se encuentra en la base. Devuelve el autor actualizado o `null`.                                                |
+| `Author? DeleteAuthor(Author author)`  | Elimina un autor si existe. Antes de eliminarlo, reasigna todos sus libros al autor `"Unknown"` (ID = 1). Devuelve el autor eliminado o `null`. |
+| `string? GetInfoAuthor(Author author)` | Devuelve un resumen de la información del autor usando el método `GetInfo()` del modelo.                                                        |
 
-#### 🧠 Consideraciones arquitectónicas
+##### 🧠 Consideraciones arquitectónicas
 
 - **Validación de existencia**: Todos los métodos que modifican o eliminan primero validan que el autor exista usando `GetAuthorById`.
 - **Reasignación de libros**: Antes de eliminar un autor, sus libros se reasignan al autor `"Unknown"` para mantener la integridad referencial.
@@ -160,29 +162,221 @@ Esta clase gestiona todas las operaciones relacionadas con la entidad `Author`, 
 
 Esta clase gestiona todas las operaciones relacionadas con la entidad `Genre`, incluyendo creación, consulta, actualización, eliminación y conteo de libros asociados. También implementa una lógica especial para reasignar los libros de un género eliminado al género por defecto `"Unknown"`.
 
-#### 🧱 Dependencias
+##### 🧱 Dependencias
 - `AppDbContext`: contexto de Entity Framework para acceder a la base de datos.
 - Modelo: `Genre`, `Book`.
 
-#### 🔧 Métodos públicos
+##### 🔧 Métodos públicos
 
-| Método | Descripción |
-|--------|-------------|
-| `List<Genre> GetAllGenres()` | Devuelve todos los géneros registrados en la base de datos. |
-| `Genre? GetGenreById(int id)` | Busca un género por su ID. Devuelve `null` si no existe. |
-| `Genre AddGenre(Genre genre)` | Agrega un nuevo género a la base de datos y lo retorna con su ID asignado. |
-| `Genre? UpdateGenre(Genre genre)` | Actualiza un género existente si se encuentra en la base. Devuelve el género actualizado o `null`. |
-| `Genre? DeleteGenre(Genre genre)` | Elimina un género si existe. Antes de eliminarlo, reasigna todos sus libros al género `"Unknown"` (ID = 1). Devuelve el género eliminado o `null`. |
-| `int? GetCountBooksGenre(Genre genre)` | Devuelve la cantidad de libros asociados al género usando el método `CountBooks()` del modelo. |
+| Método                                 | Descripción                                                                                                                                        |
+|----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `List<Genre> GetAllGenres()`           | Devuelve todos los géneros registrados en la base de datos.                                                                                        |
+| `Genre? GetGenreById(int id)`          | Busca un género por su ID. Devuelve `null` si no existe.                                                                                           |
+| `Genre? GetGenreByName(string name)`   | Busca un género por su nombre. Devuelve `null` si no existe.                                                                                       |
+| `Genre AddGenre(Genre genre)`          | Agrega un nuevo género a la base de datos y lo retorna con su ID asignado.                                                                         |
+| `Genre? UpdateGenre(Genre genre)`      | Actualiza un género existente si se encuentra en la base. Devuelve el género actualizado o `null`.                                                 |
+| `Genre? DeleteGenre(Genre genre)`      | Elimina un género si existe. Antes de eliminarlo, reasigna todos sus libros al género `"Unknown"` (ID = 1). Devuelve el género eliminado o `null`. |
+| `int? GetCountBooksGenre(Genre genre)` | Devuelve la cantidad de libros asociados al género usando el método `CountBooks()` del modelo.                                                     |
 
-#### 🧠 Consideraciones arquitectónicas
+##### 🧠 Consideraciones arquitectónicas
 
 - **Validación de existencia**: Todos los métodos que modifican o eliminan primero validan que el género exista usando `GetGenreById`.
 - **Reasignación de libros**: Antes de eliminar un género, sus libros se reasignan al género `"Unknown"` para mantener la integridad referencial.
 - **Encapsulamiento de lógica**: La reasignación de libros se realiza usando el método `ChangeGenre` del modelo `Book`, respetando el principio de responsabilidad única.
 - **Persistencia explícita**: Cada operación que modifica datos llama a `_dbContext.SaveChanges()` para asegurar que los cambios se guarden.
 
----
+### 🗂️ /Commands
+
+#### `RelayCommand.cs`
+
+Clase ubicada en `/Commands` que implementa la interfaz `ICommand` de WPF. Su propósito es encapsular la lógica de ejecución de acciones y la validación de sí estas pueden ejecutarse, permitiendo que la vista (XAML) se conecte con métodos del ViewModel sin acoplamiento directo.
+
+##### 🧱 Dependencias
+- `System.Windows.Input`: proporciona la interfaz `ICommand` utilizada por WPF para manejar acciones en la UI.
+
+##### 🔧 Campos privados
+- `_execute` (`Action<object?>`): delegado que representa la acción a ejecutar. Es obligatorio y no puede ser nulo.
+- `_canExecute` (`Func<object?, bool>?`): delegado opcional que determina si el comando puede ejecutarse. Si es nulo, el comando siempre está habilitado.
+
+##### 🔧 Métodos públicos
+
+| Método / Evento                                       | Descripción                                                                                                                      |
+|-------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| `RelayCommand(Action<object?>, Func<object?, bool>?)` | Constructor que inicializa los delegados. Lanza excepción si `execute` es nulo.                                                  |
+| `bool CanExecute(object? parameter)`                  | Devuelve `true` si `_canExecute` es nulo o si la función retorna `true`.                                                         |
+| `void Execute(object? parameter)`                     | Ejecuta la acción definida en `_execute` pasando el parámetro recibido.                                                          |
+| `event EventHandler? CanExecuteChanged`               | Evento que notifica a la UI cuando debe reevaluar si el comando está habilitado. Se conecta a `CommandManager.RequerySuggested`. |
+
+##### 🧠 Consideraciones arquitectónicas
+- **Uso en MVVM**: Permite definir comandos en el ViewModel sin necesidad de código-behind en la vista.
+- **Validación opcional**: Si no se define `_canExecute`, el comando siempre estará disponible.
+- **Integración con WPF**: El evento `CanExecuteChanged` asegura que los controles (como botones) se habiliten o deshabiliten automáticamente según el estado del comando.
+- **Reutilización**: Al ser genérico, puede usarse para cualquier acción en la aplicación, evitando duplicación de lógica.
+
+### 🗂️ /ViewModels
+
+#### `BaseViewModel.cs`
+
+Clase abstracta ubicada en `/ViewModels` que implementa la interfaz `INotifyPropertyChanged`. Su propósito es servir como clase base para todos los ViewModels de la aplicación, proporcionando la infraestructura necesaria para notificar cambios en las propiedades y facilitar el enlace de datos (data binding) en WPF.
+
+##### 🧱 Dependencias
+- `System.ComponentModel`: contiene la interfaz `INotifyPropertyChanged` y clases relacionadas con notificación de cambios.
+- `System.Runtime.CompilerServices`: permite usar el atributo `CallerMemberName` para obtener automáticamente el nombre de la propiedad que invoca un método.
+
+##### 🔧 Miembros principales
+
+| Miembro                                                                         | Descripción                                                                                                                                     |
+|---------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| `event PropertyChangedEventHandler? PropertyChanged`                            | Evento que se dispara cuando una propiedad cambia, utilizado por WPF para actualizar la UI.                                                     |
+| `protected virtual void OnPropertyChanged(string? propertyName = null)`         | Método que invoca el evento `PropertyChanged`. Usa `CallerMemberName` para obtener automáticamente el nombre de la propiedad.                   |
+| `protected bool SetField<T>(ref T field, T value, string? propertyName = null)` | Método auxiliar que compara el valor actual con el nuevo. Si son diferentes, actualiza el campo, dispara `OnPropertyChanged` y devuelve `true`. |
+
+##### 🧠 Consideraciones arquitectónicas
+- **Uso en MVVM**: Todos los ViewModels heredan de esta clase para implementar notificación de cambios sin duplicar código.
+- **Optimización con `CallerMemberName`**: Evita tener que pasar manualmente el nombre de la propiedad, reduciendo errores y mejorando la mantenibilidad.
+- **Encapsulación de lógica repetitiva**: El método `SetField` centraliza la validación y notificación de cambios, asegurando consistencia en todas las propiedades.
+- **Flexibilidad**: Al ser abstracta, no sé instancia directamente, sino que se extiende en clases concretas como `BookViewModel`.
+
+#### `BookViewModel.cs`
+
+Clase ubicada en `/ViewModels` que implementa la lógica de presentación para la entidad `Book`. Hereda de `BaseViewModel` para soportar notificación de cambios y expone propiedades y comandos que permiten a la vista interactuar con los datos de libros sin acoplarse directamente a la base de datos.
+
+##### 🧱 Dependencias
+- `ServiceBook`: servicio que encapsula la lógica de acceso y manipulación de libros.
+- `RelayCommand`: implementación de `ICommand` usada para definir acciones ejecutables desde la vista.
+- `ValidationHelper`: clase auxiliar para validar entradas de texto y números.
+- DTOs: `StockBookRequest`, `AuthorBookRequest`, `GenreBookRequest` para encapsular parámetros compuestos en los comandos.
+
+##### 🔧 Propiedades
+- `ObservableCollection<Book> Books`: colección observable que contiene todos los libros. Se inicializa con `GetAllBooks()` desde el servicio.
+- `Book? SelectedBook`: libro actualmente seleccionado en la vista. Usa `SetField` para notificar cambios.
+
+##### 🔧 Comandos públicos
+
+| Comando                   | Descripción                                                         |
+|---------------------------|---------------------------------------------------------------------|
+| `GetBookByTitleCommand`   | Busca un libro por título y lo asigna a `SelectedBook`.             |
+| `AddBookCommand`          | Agrega un nuevo libro a la base de datos y lo añade a la colección. |
+| `UpdateBookCommand`       | Actualiza un libro existente en la base y refresca la colección.    |
+| `DeleteBookCommand`       | Elimina un libro de la base y lo quita de la colección.             |
+| `RestockBookCommand`      | Incrementa el stock de un libro usando un `StockBookRequest`.       |
+| `SellBookCommand`         | Reduce el stock de un libro usando un `StockBookRequest`.           |
+| `ChangeAuthorBookCommand` | Cambia el autor de un libro usando un `AuthorBookRequest`.          |
+| `ChangeGenreBookCommand`  | Cambia el género de un libro usando un `GenreBookRequest`.          |
+
+##### 🧠 Consideraciones arquitectónicas
+- **Uso de DTOs**: Los comandos que requieren parámetros adicionales (como cantidad, autor o género) utilizan objetos auxiliares (`StockBookRequest`, `AuthorBookRequest`, `GenreBookRequest`) para simplificar el paso de datos desde la vista.
+- **Sincronización con la UI**: Cada operación actualiza la colección `Books` y la propiedad `SelectedBook` para mantener la interfaz sincronizada con el estado actual.
+- **Validaciones**: Se emplea `ValidationHelper` en los comandos para asegurar que los parámetros sean válidos antes de ejecutar la acción.
+- **Patrón MVVM**: El ViewModel actúa como intermediario entre la vista y el servicio, manteniendo una separación clara de responsabilidades y evitando lógica en el código-behind.
+
+#### `AuthorViewModel.cs`
+
+Clase ubicada en `/ViewModels` que implementa la lógica de presentación para la entidad `Author`. Hereda de `BaseViewModel` para soportar notificación de cambios y expone propiedades y comandos que permiten a la vista interactuar con los datos de autores sin acoplarse directamente a la base de datos.
+
+##### 🧱 Dependencias
+- `ServiceAuthor`: servicio que encapsula la lógica de acceso y manipulación de autores.
+- `RelayCommand`: implementación de `ICommand` usada para definir acciones ejecutables desde la vista.
+- `ValidationHelper`: clase auxiliar para validar entradas de texto y números.
+
+##### 🔧 Propiedades
+- `ObservableCollection<Author> Authors`: colección observable que contiene todos los autores. Se inicializa con `GetAllAuthors()` desde el servicio.
+- `Author? SelectedAuthor`: autor actualmente seleccionado en la vista. Usa `SetField` para notificar cambios.
+
+##### 🔧 Comandos públicos
+
+| Comando                  | Descripción                                                                                       |
+|--------------------------|---------------------------------------------------------------------------------------------------|
+| `GetAuthorByNameCommand` | Busca un autor por nombre y lo asigna a `SelectedAuthor`.                                         |
+| `AddAuthorCommand`       | Agrega un nuevo autor a la base de datos y lo añade a la colección.                               |
+| `UpdateAuthorCommand`    | Actualiza un autor existente en la base y sincroniza manualmente sus propiedades en la colección. |
+| `DeleteAuthorCommand`    | Elimina un autor de la base y lo quita de la colección.                                           |
+
+##### 🧠 Consideraciones arquitectónicas
+- **Sincronización con la UI**: Cada operación actualiza la colección `Authors` y la propiedad `SelectedAuthor` para mantener la interfaz sincronizada con el estado actual.
+- **Actualización manual de propiedades**: En `UpdateAuthorCommand` se modifican directamente las propiedades del objeto existente en la colección en lugar de reemplazarlo, lo que mantiene las referencias vivas en la UI.
+- **Validaciones**: Se emplea `ValidationHelper` en los comandos para asegurar que los parámetros sean válidos antes de ejecutar la acción.
+- **Patrón MVVM**: El ViewModel actúa como intermediario entre la vista y el servicio, manteniendo una separación clara de responsabilidades y evitando lógica en el código-behind.
+
+#### `GenreViewModel.cs`
+
+Clase ubicada en `/ViewModels` que implementa la lógica de presentación para la entidad `Genre`. Hereda de `BaseViewModel` para soportar notificación de cambios y expone propiedades y comandos que permiten a la vista interactuar con los datos de géneros sin acoplarse directamente a la base de datos.
+
+##### 🧱 Dependencias
+- `ServiceGenre`: servicio que encapsula la lógica de acceso y manipulación de géneros.
+- `RelayCommand`: implementación de `ICommand` usada para definir acciones ejecutables desde la vista.
+- `ValidationHelper`: clase auxiliar para validar entradas de texto.
+
+##### 🔧 Propiedades
+- `ObservableCollection<Genre> Genres`: colección observable que contiene todos los géneros. Se inicializa con `GetAllGenres()` desde el servicio.
+- `Genre? SelectedGenre`: género actualmente seleccionado en la vista. Usa `SetField` para notificar cambios.
+
+##### 🔧 Comandos públicos
+
+| Comando                  | Descripción                                                                 |
+|---------------------------|-----------------------------------------------------------------------------|
+| `GetGenreByNameCommand`  | Busca un género por nombre y lo asigna a `SelectedGenre`.                    |
+| `AddGenreCommand`        | Agrega un nuevo género a la base de datos y lo añade a la colección.         |
+| `UpdateGenreCommand`     | Actualiza un género existente en la base y sincroniza manualmente sus propiedades en la colección. |
+| `DeleteGenreCommand`     | Elimina un género de la base y lo quita de la colección.                     |
+
+##### 🧠 Consideraciones arquitectónicas
+- **Sincronización con la UI**: cada operación actualiza la colección `Genres` y la propiedad `SelectedGenre` para mantener la interfaz sincronizada con el estado actual.
+- **Actualización manual de propiedades**: en `UpdateGenreCommand` se modifican directamente las propiedades del objeto existente en la colección en lugar de reemplazarlo, lo que mantiene las referencias vivas en la UI.
+- **Validaciones**: se emplea `ValidationHelper` en los comandos para asegurar que los parámetros sean válidos antes de ejecutar la acción.
+- **Patrón MVVM**: el ViewModel actúa como intermediario entre la vista y el servicio, manteniendo una separación clara de responsabilidades y evitando lógica en el código-behind.
+
+#### 🗂️ /DTOs
+
+##### `StockBookRequest.cs`
+
+Clase ubicada en `/ViewModels/DTOs` que encapsula los parámetros necesarios para operaciones de stock sobre un libro. Se utiliza en comandos como `RestockBookCommand` y `SellBookCommand` dentro del `BookViewModel`.
+
+###### 🧱 Dependencias
+- `Book`: modelo principal de la entidad libro.
+
+###### 🔧 Propiedades
+- `Book Book`: referencia al libro sobre el cual se ejecutará la operación.
+- `int Amount`: cantidad de unidades a ingresar o vender.
+
+###### 🧠 Consideraciones arquitectónicas
+- **Uso en comandos**: Permite pasar un solo objeto como `CommandParameter` en lugar de múltiples valores.
+- **Validación**: El `Amount` debe ser mayor que cero para operaciones de reabastecimiento y no superar el stock disponible para ventas.
+- **Separación de responsabilidades**: Mantiene la lógica de transporte de datos desacoplada del modelo y del servicio.
+
+##### `AuthorBookRequest.cs`
+
+Clase ubicada en `/ViewModels/DTOs` que encapsula los parámetros necesarios para cambiar el autor de un libro. Se utiliza en el comando `ChangeAuthorBookCommand` dentro del `BookViewModel`.
+
+###### 🧱 Dependencias
+- `Book`: modelo principal de la entidad libro.
+- `Author`: modelo de la entidad autor.
+
+###### 🔧 Propiedades
+- `Book Book`: referencia al libro cuyo autor será modificado.
+- `Author Author`: nuevo autor que se asignará al libro.
+
+###### 🧠 Consideraciones arquitectónicas
+- **Uso en comandos**: Simplifica el paso de datos desde la vista al ViewModel.
+- **Integridad referencial**: El cambio de autor se valida en el servicio y se aplica mediante el método `ChangeAuthor` del modelo `Book`.
+- **Flexibilidad**: Permite reutilizar la misma estructura para cualquier operación que requiera un libro y un autor.
+
+##### `GenreBookRequest.cs`
+
+Clase ubicada en `/ViewModels/DTOs` que encapsula los parámetros necesarios para cambiar el género de un libro. Se utiliza en el comando `ChangeGenreBookCommand` dentro del `BookViewModel`.
+
+###### 🧱 Dependencias
+- `Book`: modelo principal de la entidad libro.
+- `Genre`: modelo de la entidad género.
+
+###### 🔧 Propiedades
+- `Book Book`: referencia al libro cuyo género será modificado.
+- `Genre Genre`: nuevo género que se asignará al libro.
+
+###### 🧠 Consideraciones arquitectónicas
+- **Uso en comandos**: Facilita el transporte de datos entre la vista y el ViewModel.
+- **Integridad referencial**: El cambio de género se valida en el servicio y se aplica mediante el método `ChangeGenre` del modelo `Book`.
+- **Consistencia**: Mantiene la colección `Books` y la propiedad `SelectedBook` sincronizadas con el estado actual.
 
 ### 🗂️ /Helpers
 

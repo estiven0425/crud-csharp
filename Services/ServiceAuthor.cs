@@ -22,6 +22,11 @@ public class ServiceAuthor
         return _dbContext.Authors.FirstOrDefault(author => author.Id == id);
     }
 
+    public Author? GetAuthorByName(string name)
+    {
+        return _dbContext.Authors.FirstOrDefault(author => author.Name == name);
+    }
+
     public Author AddAuthor(Author author)
     {
         Author newAuthor = _dbContext.Authors.Add(author).Entity;
@@ -74,12 +79,5 @@ public class ServiceAuthor
         }
 
         return deletedAuthor;
-    }
-
-    public string? GetInfoAuthor(Author author)
-    {
-        Author? authorToOperate = GetAuthorById(author.Id);
-
-        return authorToOperate?.GetInfo();
     }
 }

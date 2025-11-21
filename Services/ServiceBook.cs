@@ -29,6 +29,14 @@ public class ServiceBook
             .FirstOrDefault(book => book.Id == id);
     }
 
+    public Book? GetBookByTitle(string title)
+    {
+        return _dbContext.Books
+            .Include(book => book.Author)
+            .Include(book => book.Genre)
+            .FirstOrDefault(book => book.Title == title);
+    }
+
     public Book AddBook(Book book)
     {
         Book newBook = _dbContext.Books.Add(book).Entity;

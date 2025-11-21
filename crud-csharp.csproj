@@ -10,10 +10,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Commands\" />
       <Folder Include="db\" />
       <Folder Include="Resources\" />
-      <Folder Include="ViewModels\" />
       <Folder Include="Views\" />
     </ItemGroup>
 
