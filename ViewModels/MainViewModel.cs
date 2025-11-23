@@ -69,8 +69,11 @@ public class MainViewModel : BaseViewModel
 
     public ICommand SelectedSearchCommand { get; set; }
     public ICommand NavigationBooksCommand { get; set; }
+    public ICommand NavigationBookCommand { get; set; }
     public ICommand NavigationAuthorsCommand { get; set; }
+    public ICommand NavigationAuthorCommand { get; set; }
     public ICommand NavigationGenresCommand { get; set; }
+    public ICommand NavigationGenreCommand { get; set; }
 
     private object? _currentView;
     public object? CurrentView
@@ -79,11 +82,13 @@ public class MainViewModel : BaseViewModel
         set => SetField(ref _currentView, value);
     }
 
-    public MainViewModel(ServiceBook serviceBook, ServiceAuthor serviceAuthor, ServiceGenre serviceGenre)
+    public MainViewModel(ServiceBook serviceBook, ServiceAuthor serviceAuthor, ServiceGenre serviceGenre, Action<object> navigate)
     {
         _serviceBook = serviceBook;
         _serviceAuthor = serviceAuthor;
         _serviceGenre = serviceGenre;
+
+        CurrentView = this;
 
         Books = new ObservableCollection<Book>(_serviceBook.GetAllBooks().OrderByDescending(book => book.Id));
         Authors = new ObservableCollection<Author>(_serviceAuthor.GetAllAuthors().OrderByDescending(author => author.Id));
@@ -97,17 +102,32 @@ public class MainViewModel : BaseViewModel
                     if (SearchInBooks)
                     {
                         var book = _serviceBook.GetBookByTitle(SearchText);
-                        if (book != null) SelectedBook = book;
+                        if (book != null)
+                        {
+                            SelectedAuthor = null;
+                            SelectedGenre = null;
+                            SelectedBook = book;
+                        }
                     }
                     else if (SearchInAuthors)
                     {
                         var author = _serviceAuthor.GetAuthorByName(SearchText);
-                        if (author != null) SelectedAuthor = author;
+                        if (author != null)
+                        {
+                            SelectedBook = null;
+                            SelectedGenre = null;
+                            SelectedAuthor = author;
+                        }
                     }
                     else if (SearchInGenres)
                     {
                         var genre = _serviceGenre.GetGenreByName(SearchText);
-                        if (genre != null) SelectedGenre = genre;
+                        if (genre != null)
+                        {
+                            SelectedBook = null;
+                            SelectedAuthor = null;
+                            SelectedGenre = genre;
+                        }
                     }
                 }
             },
@@ -115,36 +135,51 @@ public class MainViewModel : BaseViewModel
         );
 
         NavigationBooksCommand = new RelayCommand(
-            execute: param =>
+            execute: _ =>
             {
-                if (param is var query)
-                {
-                    CurrentView = new BookViewModel(_serviceBook);
-                }
+                navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, navigate));
             },
-            canExecute: param => param is var query
+            canExecute: _ => true
+        );
+
+        NavigationBookCommand = new RelayCommand(
+            execute: _ =>
+            {
+                CurrentView = new BookViewModel(_serviceBook, SelectedBook, _serviceAuthor, _serviceGenre, navigate);
+            },
+            canExecute: _ => true
         );
 
         NavigationAuthorsCommand = new RelayCommand(
-            execute: param =>
+            execute: _ =>
             {
-                if (param is var query)
-                {
-                    CurrentView = new AuthorViewModel(_serviceAuthor);
-                }
+                // CurrentView = new AuthorsViewModel(_serviceAuthor, navigate);
             },
-            canExecute: param => param is var query
+            canExecute: _ => true
+        );
+
+        NavigationAuthorCommand = new RelayCommand(
+            execute: _ =>
+            {
+                // CurrentView = new AuthorViewModel(_serviceAuthor, SelectedAuthor, navigate);
+            },
+            canExecute: _ => true
         );
 
         NavigationGenresCommand = new RelayCommand(
-            execute: param =>
+            execute: _ =>
             {
-                if (param is var query)
-                {
-                    CurrentView = new GenreViewModel(_serviceGenre);
-                }
+                // CurrentView = new GenresViewModel(_serviceGenre, navigate);
             },
-            canExecute: param => param is var query
+            canExecute: _ => true
+        );
+
+        NavigationGenreCommand = new RelayCommand(
+            execute: _ =>
+            {
+                // CurrentView = new GenreViewModel(_serviceGenre, SelectedGenre, navigate);
+            },
+            canExecute: _ => true
         );
     }
 }

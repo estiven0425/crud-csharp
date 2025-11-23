@@ -13,12 +13,14 @@ public partial class MainWindow : Window
 
         var context = new AppDbContext();
 
-        DataContext = new MainViewModel(
+        MainViewModel mainViewModel = null!;
+        mainViewModel = new MainViewModel(
             new ServiceBook(context),
             new ServiceAuthor(context),
-            new ServiceGenre(context)
+            new ServiceGenre(context),
+            navigate: viewModel => mainViewModel.CurrentView = viewModel
         );
 
-        ((MainViewModel)DataContext).CurrentView = new Views.MainView();
+        DataContext = mainViewModel;
     }
 }

@@ -2,9 +2,9 @@
 
 namespace crud_csharp.Views;
 
-public partial class MainView : UserControl
+public partial class BooksView : UserControl
 {
-    public MainView()
+    public BooksView()
     {
         InitializeComponent();
     }

@@ -1,10 +1,11 @@
 ﻿<UserControl x:Class="crud_csharp.Views.MainView"
+             d:DesignHeight="450" d:DesignWidth="800"
              mc:Ignorable="d"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -63,7 +64,8 @@
                     Width="100"/>
         </StackPanel>
         <Grid Grid.Row="3"
-              HorizontalAlignment="Stretch">
+              HorizontalAlignment="Stretch"
+              MinWidth="560">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -74,6 +76,12 @@
                           VerticalScrollBarVisibility="Hidden">
                 <ListView ItemsSource="{Binding Books}"
                           SelectedItem="{Binding SelectedBook}">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="MouseDoubleClick">
+                            <b:InvokeCommandAction Command="{Binding NavigationBookCommand}"
+                                                   CommandParameter="{Binding SelectedBook}"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
                             <GridViewColumn DisplayMemberBinding="{Binding Title}"
@@ -97,6 +105,12 @@
                 <ListView ItemsSource="{Binding Authors}"
                           Margin="10,0"
                           SelectedItem="{Binding SelectedAuthor}">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="MouseDoubleClick">
+                            <b:InvokeCommandAction Command="{Binding NavigationAuthorCommand}"
+                                                   CommandParameter="{Binding SelectedAuthor}"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
                             <GridViewColumn DisplayMemberBinding="{Binding Name}"
@@ -119,6 +133,12 @@
                           VerticalScrollBarVisibility="Hidden">
                 <ListView ItemsSource="{Binding Genres}"
                           SelectedItem="{Binding SelectedGenre}">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="MouseDoubleClick">
+                            <b:InvokeCommandAction Command="{Binding NavigationGenreCommand}"
+                                                   CommandParameter="{Binding SelectedGenre}"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
                             <GridViewColumn DisplayMemberBinding="{Binding Name}"

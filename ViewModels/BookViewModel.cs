@@ -11,59 +11,34 @@ namespace crud_csharp.ViewModels;
 public class BookViewModel : BaseViewModel
 {
     private readonly ServiceBook _serviceBook;
-
-    public ObservableCollection<Book> Books { get; set; }
+    private readonly ServiceAuthor _serviceAuthor;
+    private readonly ServiceGenre _serviceGenre;
+    private readonly Action<object?> _navigate;
 
     private Book? _selectedBook;
+
     public Book? SelectedBook
     {
         get => _selectedBook;
-        set => SetField(ref _selectedBook, value);
+        private set => SetField(ref _selectedBook,  value);
     }
 
-    public ICommand GetBookByTitleCommand { get; }
-    public ICommand AddBookCommand { get; }
-    public ICommand UpdateBookCommand { get; }
-    public ICommand DeleteBookCommand { get; }
-    public ICommand RestockBookCommand { get; }
-    public ICommand SellBookCommand { get; }
-    public ICommand ChangeAuthorBookCommand { get; }
-    public ICommand ChangeGenreBookCommand { get; }
+    public ICommand UpdateBookCommand { get; set; }
+    public ICommand DeleteBookCommand { get; set; }
+    public ICommand RestockBookCommand { get; set; }
+    public ICommand SellBookCommand { get; set; }
+    public ICommand ChangeAuthorBookCommand { get; set; }
+    public ICommand ChangeGenreBookCommand { get; set; }
+    public ICommand NavigationBooksCommand { get; set; }
 
-    public BookViewModel(ServiceBook serviceBook)
+    public BookViewModel(ServiceBook serviceBook, Book? selectedBook, ServiceAuthor serviceAuthor, ServiceGenre serviceGenre, Action<object> navigate)
     {
         _serviceBook = serviceBook;
+        _serviceAuthor = serviceAuthor;
+        _serviceGenre = serviceGenre;
+        _navigate = navigate;
 
-        Books = new ObservableCollection<Book>(_serviceBook.GetAllBooks());
-
-        GetBookByTitleCommand = new RelayCommand(
-            execute: param =>
-            {
-                if (param is string title && !ValidationHelper.IsInvalidText(title))
-                {
-                    var book = _serviceBook.GetBookByTitle(title);
-                    if (book != null)
-                    {
-                        SelectedBook = book;
-                    }
-                }
-            },
-            canExecute: param => param is string title && !ValidationHelper.IsInvalidText(title)
-        );
-
-        AddBookCommand = new RelayCommand(
-            execute: param =>
-            {
-                if (param is Book book)
-                {
-                    _serviceBook.AddBook(book);
-
-                    Books.Add(book);
-                    SelectedBook = book;
-                }
-            },
-            canExecute: param =>  param is Book book
-        );
+        SelectedBook = selectedBook;
 
         UpdateBookCommand = new RelayCommand(
             execute: param =>
@@ -74,19 +49,13 @@ public class BookViewModel : BaseViewModel
 
                     if (SelectedBook != null)
                     {
-                        int oldBook = Books.IndexOf(SelectedBook);
-                        if (oldBook >= 0)
-                        {
-                            Books[oldBook].Title = book.Title;
-                            Books[oldBook].Country =  book.Country;
-                            Books[oldBook].Price =  book.Price;
-                            Books[oldBook].Stock =  book.Stock;
+                        SelectedBook.Title = book.Title;
+                        SelectedBook.Country = book.Country;
+                        SelectedBook.Price = book.Price;
+                        SelectedBook.Stock = book.Stock;
 
-                            Books[oldBook].ChangeAuthor(book.Author);
-                            Books[oldBook].ChangeGenre(book.Genre);
-                        }
-
-                        SelectedBook = Books[oldBook];
+                        SelectedBook.ChangeAuthor(book.Author);
+                        SelectedBook.ChangeGenre(book.Genre);
                     }
                 }
             },
@@ -100,8 +69,7 @@ public class BookViewModel : BaseViewModel
                 {
                     _serviceBook.DeleteBook(book);
 
-                    Books.Remove(book);
-                    SelectedBook = null;
+                    _navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, _navigate));
                 }
             },
             canExecute: param =>  param is Book book
@@ -116,12 +84,7 @@ public class BookViewModel : BaseViewModel
 
                     if (SelectedBook != null)
                     {
-                        int oldBook = Books.IndexOf(SelectedBook);
-                        if (oldBook >= 0)
-                        {
-                            Books[oldBook].Stock = stockBookRequest.Book.Stock;
-                            SelectedBook = Books[oldBook];
-                        }
+                        SelectedBook.Stock = stockBookRequest.Book.Stock;
                     }
                 }
             },
@@ -137,12 +100,7 @@ public class BookViewModel : BaseViewModel
 
                     if (SelectedBook != null)
                     {
-                        int oldBook = Books.IndexOf(SelectedBook);
-                        if (oldBook >= 0)
-                        {
-                            Books[oldBook].Stock = stockBookRequest.Book.Stock;
-                            SelectedBook = Books[oldBook];
-                        }
+                        SelectedBook.Stock = stockBookRequest.Book.Stock;
                     }
                 }
             },
@@ -158,12 +116,7 @@ public class BookViewModel : BaseViewModel
 
                     if (SelectedBook != null)
                     {
-                        int oldBook = Books.IndexOf(SelectedBook);
-                        if (oldBook >= 0)
-                        {
-                            Books[oldBook].ChangeAuthor(authorBookRequest.Author);
-                            SelectedBook = Books[oldBook];
-                        }
+                        SelectedBook.ChangeAuthor(authorBookRequest.Author);
                     }
                 }
             },
@@ -179,16 +132,19 @@ public class BookViewModel : BaseViewModel
 
                     if (SelectedBook != null)
                     {
-                        int oldBook = Books.IndexOf(SelectedBook);
-                        if (oldBook >= 0)
-                        {
-                            Books[oldBook].ChangeGenre(genreBookRequest.Genre);
-                            SelectedBook = Books[oldBook];
-                        }
+                        SelectedBook.ChangeGenre(genreBookRequest.Genre);
                     }
                 }
             },
             canExecute: param => param is GenreBookRequest genreBookRequest
+        );
+
+        NavigationBooksCommand = new RelayCommand(
+            execute: _ =>
+            {
+                _navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, _navigate));
+            },
+            canExecute: _ => true
         );
     }
 }
