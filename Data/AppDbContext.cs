@@ -1,4 +1,5 @@
-﻿using crud_csharp.Models;
+﻿using System.IO;
+using crud_csharp.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace crud_csharp.Data;
@@ -8,6 +9,12 @@ public class AppDbContext : DbContext
     public DbSet<Book> Books { get; set; }
     public DbSet<Author> Authors { get; set; }
     public DbSet<Genre> Genres { get; set; }
+
+    public AppDbContext()
+    {
+        Directory.CreateDirectory("./db");
+        Database.EnsureCreated();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

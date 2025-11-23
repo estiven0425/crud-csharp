@@ -1,0 +1,138 @@
+﻿<UserControl x:Class="crud_csharp.Views.MainView"
+             mc:Ignorable="d"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,10"
+                   Orientation="Horizontal">
+            <TextBox Height="30"
+                     Margin="0,0,10,0"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     Width="500">
+            </TextBox>
+            <Button Content="Search"
+                    Command="{Binding SelectedSearchCommand}"
+                    Width="50"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,10"
+                    Orientation="Horizontal">
+            <RadioButton Content="Books"
+                         GroupName="SearchOptions"
+                         IsChecked="{Binding SearchInBooks}"
+                         Width="100"/>
+            <RadioButton Content="Authors"
+                         GroupName="SearchOptions"
+                         IsChecked="{Binding SearchInAuthors}"
+                         Margin="10,0"
+                         Width="100"/>
+            <RadioButton Content="Genres"
+                         GroupName="SearchOptions"
+                         IsChecked="{Binding SearchInGenres}"
+                         Width="100"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,10"
+                    Orientation="Horizontal">
+            <Button Command="{Binding NavigationBooksCommand }"
+                    Content="All books"
+                    Height="50"
+                    Width="100"/>
+            <Button Command="{Binding NavigationAuthorsCommand }"
+                    Content="All Authors"
+                    Height="50"
+                    Margin="10,0"
+                    Width="100"/>
+            <Button Command="{Binding NavigationGenresCommand }"
+                    Content="All genres"
+                    Height="50"
+                    Width="100"/>
+        </StackPanel>
+        <Grid Grid.Row="3"
+              HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ScrollViewer Grid.Column="0"
+                          VerticalScrollBarVisibility="Hidden">
+                <ListView ItemsSource="{Binding Books}"
+                          SelectedItem="{Binding SelectedBook}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="False">
+                            <GridViewColumn DisplayMemberBinding="{Binding Title}"
+                                            Header="Title"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding Author.Name}"
+                                            Header="Author"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding Genre.Name}"
+                                            Header="Genre"/>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.Resources>
+                        <Style TargetType="GridViewColumnHeader">
+                            <Setter Property="IsHitTestVisible"
+                                    Value="False"/>
+                        </Style>
+                    </ListView.Resources>
+                </ListView>
+            </ScrollViewer>
+            <ScrollViewer Grid.Column="1"
+                          VerticalScrollBarVisibility="Hidden">
+                <ListView ItemsSource="{Binding Authors}"
+                          Margin="10,0"
+                          SelectedItem="{Binding SelectedAuthor}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="False">
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}"
+                                            Header="Name"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding Age}"
+                                            Header="Age"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding Country}"
+                                            Header="Country"/>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.Resources>
+                        <Style TargetType="GridViewColumnHeader">
+                            <Setter Property="IsHitTestVisible"
+                                    Value="False"/>
+                        </Style>
+                    </ListView.Resources>
+                </ListView>
+            </ScrollViewer>
+            <ScrollViewer Grid.Column="2"
+                          VerticalScrollBarVisibility="Hidden">
+                <ListView ItemsSource="{Binding Genres}"
+                          SelectedItem="{Binding SelectedGenre}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="False">
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}"
+                                            Header="Name"/>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.Resources>
+                        <Style TargetType="GridViewColumnHeader">
+                            <Setter Property="IsHitTestVisible"
+                                    Value="False"/>
+                        </Style>
+                    </ListView.Resources>
+                </ListView>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

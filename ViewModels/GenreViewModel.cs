@@ -34,7 +34,7 @@ public class GenreViewModel : BaseViewModel
         GetGenreByNameCommand = new RelayCommand(
             execute: param =>
             {
-                if (param is String name && !ValidationHelper.IsInvalidText(name))
+                if (param is string name && !ValidationHelper.IsInvalidText(name))
                 {
                     var genre = _serviceGenre.GetGenreByName(name);
                     if (genre != null)
@@ -43,7 +43,7 @@ public class GenreViewModel : BaseViewModel
                     }
                 }
             },
-            canExecute: param => param is String name && !ValidationHelper.IsInvalidText(name)
+            canExecute: param => param is string name && !ValidationHelper.IsInvalidText(name)
         );
 
         AddGenreCommand = new RelayCommand(

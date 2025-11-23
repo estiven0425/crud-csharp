@@ -1,13 +1,13 @@
-﻿using System.Windows;
+﻿using System.Windows.Controls;
 using crud_csharp.Data;
 using crud_csharp.Services;
 using crud_csharp.ViewModels;
 
-namespace crud_csharp;
+namespace crud_csharp.Views;
 
-public partial class MainWindow : Window
+public partial class MainView : UserControl
 {
-    public MainWindow()
+    public MainView()
     {
         InitializeComponent();
 
@@ -18,7 +18,5 @@ public partial class MainWindow : Window
             new ServiceAuthor(context),
             new ServiceGenre(context)
         );
-
-        ((MainViewModel)DataContext).CurrentView = new Views.MainView();
     }
 }

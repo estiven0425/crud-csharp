@@ -3,6 +3,7 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/.idea/.idea.crud-csharp/.idea/queries/Query.sql" dialect="SQLite" />
     <file url="file://$PROJECT_DIR$/.idea/.idea.crud-csharp/.idea/queries/Query_1.sql" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/.idea/.idea.crud-csharp/.idea/queries/Query_2.sql" dialect="SQLite" />
     <file url="PROJECT" dialect="SQLite" />
   </component>
 </project>

@@ -39,7 +39,7 @@ public class BookViewModel : BaseViewModel
         GetBookByTitleCommand = new RelayCommand(
             execute: param =>
             {
-                if (param is String title && !ValidationHelper.IsInvalidText(title))
+                if (param is string title && !ValidationHelper.IsInvalidText(title))
                 {
                     var book = _serviceBook.GetBookByTitle(title);
                     if (book != null)
@@ -48,7 +48,7 @@ public class BookViewModel : BaseViewModel
                     }
                 }
             },
-            canExecute: param => param is String title && !ValidationHelper.IsInvalidText(title)
+            canExecute: param => param is string title && !ValidationHelper.IsInvalidText(title)
         );
 
         AddBookCommand = new RelayCommand(

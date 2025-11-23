@@ -34,7 +34,7 @@ public class AuthorViewModel : BaseViewModel
         GetAuthorByNameCommand = new RelayCommand(
             execute: param =>
             {
-                if (param is String name && !ValidationHelper.IsInvalidText(name))
+                if (param is string name && !ValidationHelper.IsInvalidText(name))
                 {
                     var author = _serviceAuthor.GetAuthorByName(name);
                     if (author != null)
@@ -43,7 +43,7 @@ public class AuthorViewModel : BaseViewModel
                     }
                 }
             },
-            canExecute: param => param is String name &&  !ValidationHelper.IsInvalidText(name)
+            canExecute: param => param is string name &&  !ValidationHelper.IsInvalidText(name)
         );
 
         AddAuthorCommand = new RelayCommand(

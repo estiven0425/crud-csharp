@@ -313,18 +313,57 @@ Clase ubicada en `/ViewModels` que implementa la lógica de presentación para l
 
 ##### 🔧 Comandos públicos
 
-| Comando                  | Descripción                                                                 |
-|---------------------------|-----------------------------------------------------------------------------|
-| `GetGenreByNameCommand`  | Busca un género por nombre y lo asigna a `SelectedGenre`.                    |
-| `AddGenreCommand`        | Agrega un nuevo género a la base de datos y lo añade a la colección.         |
-| `UpdateGenreCommand`     | Actualiza un género existente en la base y sincroniza manualmente sus propiedades en la colección. |
-| `DeleteGenreCommand`     | Elimina un género de la base y lo quita de la colección.                     |
+| Comando                 | Descripción                                                                                        |
+|-------------------------|----------------------------------------------------------------------------------------------------|
+| `GetGenreByNameCommand` | Busca un género por nombre y lo asigna a `SelectedGenre`.                                          |
+| `AddGenreCommand`       | Agrega un nuevo género a la base de datos y lo añade a la colección.                               |
+| `UpdateGenreCommand`    | Actualiza un género existente en la base y sincroniza manualmente sus propiedades en la colección. |
+| `DeleteGenreCommand`    | Elimina un género de la base y lo quita de la colección.                                           |
 
 ##### 🧠 Consideraciones arquitectónicas
 - **Sincronización con la UI**: cada operación actualiza la colección `Genres` y la propiedad `SelectedGenre` para mantener la interfaz sincronizada con el estado actual.
 - **Actualización manual de propiedades**: en `UpdateGenreCommand` se modifican directamente las propiedades del objeto existente en la colección en lugar de reemplazarlo, lo que mantiene las referencias vivas en la UI.
 - **Validaciones**: se emplea `ValidationHelper` en los comandos para asegurar que los parámetros sean válidos antes de ejecutar la acción.
 - **Patrón MVVM**: el ViewModel actúa como intermediario entre la vista y el servicio, manteniendo una separación clara de responsabilidades y evitando lógica en el código-behind.
+
+#### `MainViewModel.cs`
+
+Clase ubicada en `/ViewModels` que implementa la lógica de presentación para el **dashboard principal** de la aplicación.  
+Hereda de `BaseViewModel` para soportar notificación de cambios y expone colecciones, propiedades y comandos que permiten a la vista mostrar las entidades más recientes, realizar búsquedas específicas y navegar hacia vistas detalladas de Libros, Autores o Géneros.
+
+##### 🧱 Dependencias
+- `ServiceBook`, `ServiceAuthor`, `ServiceGenre`: servicios que encapsulan la lógica de acceso y manipulación de cada entidad.
+- `RelayCommand`: implementación de `ICommand` usada para definir acciones ejecutables desde la vista.
+- `ValidationHelper`: clase auxiliar para validar entradas de texto.
+
+##### 🔧 Propiedades
+- `ObservableCollection<Book> Books`: colección observable con los libros más recientes, ordenados por `Id` descendente.
+- `ObservableCollection<Author> Authors`: colección observable con los autores más recientes, ordenados por `Id` descendente.
+- `ObservableCollection<Genre> Genres`: colección observable con los géneros más recientes, ordenados por `Id` descendente.
+- `Book? SelectedBook`: libro actualmente seleccionado en la vista.
+- `Author? SelectedAuthor`: autor actualmente seleccionado en la vista.
+- `Genre? SelectedGenre`: género actualmente seleccionado en la vista.
+- `string SearchText`: texto ingresado en la barra de búsqueda.
+- `bool SearchInBooks`: indica si la búsqueda se realiza en libros.
+- `bool SearchInAuthors`: indica si la búsqueda se realiza en autores.
+- `bool SearchInGenres`: indica si la búsqueda se realiza en géneros.
+- `object? CurrentView`: vista actual mostrada en el `ContentControl` del `MainWindow`.
+
+##### 🔧 Comandos públicos
+
+| Comando                    | Descripción                                                                                                                               |
+|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| `SelectedSearchCommand`    | Ejecuta la búsqueda según el texto y categoría seleccionada, asignando el resultado a `SelectedBook`, `SelectedAuthor` o `SelectedGenre`. |
+| `NavigationBooksCommand`   | Cambia la vista actual (`CurrentView`) hacia la vista de libros (`BookViewModel`).                                                        |
+| `NavigationAuthorsCommand` | Cambia la vista actual (`CurrentView`) hacia la vista de autores (`AuthorViewModel`).                                                     |
+| `NavigationGenresCommand`  | Cambia la vista actual (`CurrentView`) hacia la vista de géneros (`GenreViewModel`).                                                      |
+
+##### 🧠 Consideraciones arquitectónicas
+- **Orden descendente**: las colecciones se inicializan ordenadas por `Id` descendente para mostrar primero los registros más recientes.
+- **Búsqueda específica**: la barra de búsqueda del dashboard se conecta a un grupo de radio buttons que determina en qué categoría buscar. Según la selección, se ejecuta el comando correspondiente.
+- **Sincronización con la UI**: cada comando de búsqueda actualiza la propiedad `SelectedBook`, `SelectedAuthor` o `SelectedGenre`, manteniendo la interfaz sincronizada con el resultado.
+- **Navegación dinámica**: los comandos de navegación actualizan `CurrentView`, permitiendo que el `MainWindow` muestre dinámicamente la vista correspondiente.
+- **Patrón MVVM**: el ViewModel actúa como intermediario entre la vista y los servicios, evitando lógica en el código-behind y manteniendo una separación clara de responsabilidades.
 
 #### 🗂️ /DTOs
 
@@ -377,6 +416,8 @@ Clase ubicada en `/ViewModels/DTOs` que encapsula los parámetros necesarios par
 - **Uso en comandos**: Facilita el transporte de datos entre la vista y el ViewModel.
 - **Integridad referencial**: El cambio de género se valida en el servicio y se aplica mediante el método `ChangeGenre` del modelo `Book`.
 - **Consistencia**: Mantiene la colección `Books` y la propiedad `SelectedBook` sincronizadas con el estado actual.
+
+### 🗂️ /Views
 
 ### 🗂️ /Helpers
 
