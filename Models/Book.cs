@@ -64,6 +64,8 @@ public class Book
 
     }
 
+    public string Status => IsAvailable();
+
     public Book()
     {}
     public Book(string title, string country, Genre genre, Author author, decimal price, int stock)
@@ -78,7 +80,7 @@ public class Book
         Stock = stock;
     }
 
-    public string IsAvailable()
+    private string IsAvailable()
     {
         string status = Stock > 0
             ? "Available"
@@ -97,23 +99,6 @@ public class Book
         {
             throw new ArgumentOutOfRangeException(nameof(amount), "It can only increase the stock");
         }
-    }
-
-    public decimal GetDiscountPrice(decimal discount)
-    {
-        decimal finalPrice;
-
-        if (discount is >= 0 and <= 100)
-        {
-            finalPrice = Price * (1 - discount / 100);
-        }
-        else
-        {
-            throw new ArgumentOutOfRangeException(nameof(discount),
-                "The discount cannot be less than 0 or greater than 100");
-        }
-
-        return finalPrice;
     }
 
     public void Sell(int amount)

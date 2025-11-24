@@ -68,6 +68,8 @@ public class Author
 
     public bool Status { get; set; }
 
+    public string Info => GetInfo();
+
     public Author()
     {}
     public Author(string name, int age, string country, string description, string email, string phone, bool status)

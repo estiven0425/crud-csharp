@@ -24,6 +24,8 @@ public class Genre
             : _description = value;
     }
 
+    public int BooksInGenre => CountBooks();
+
     public ICollection<Book> Books { get; private set; } = new List<Book>();
 
     public Genre()

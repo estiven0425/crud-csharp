@@ -143,6 +143,8 @@
                         <GridView AllowsColumnReorder="False">
                             <GridViewColumn DisplayMemberBinding="{Binding Name}"
                                             Header="Name"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding BooksInGenre}"
+                                            Header="Book"/>
                         </GridView>
                     </ListView.View>
                     <ListView.Resources>
