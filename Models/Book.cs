@@ -32,7 +32,7 @@ public class Book
             ? throw new ArgumentOutOfRangeException(nameof(GenreId), "0 is not permitted")
             : _genreId = value;
     }
-    public Genre Genre { get; private set; }
+    public Genre Genre { get; set; }
 
     private int _authorId;
     public int AuthorId
@@ -42,7 +42,7 @@ public class Book
             ? throw new ArgumentOutOfRangeException(nameof(AuthorId), "0 is not permitted")
             : _authorId = value;
     }
-    public Author Author { get; private set; }
+    public Author Author { get; set; }
 
     private decimal _price;
     public decimal Price

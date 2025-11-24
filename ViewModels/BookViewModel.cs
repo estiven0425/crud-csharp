@@ -69,7 +69,7 @@ public class BookViewModel : BaseViewModel
                 {
                     _serviceBook.DeleteBook(book);
 
-                    _navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, _navigate));
+                    _navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, navigate));
                 }
             },
             canExecute: param =>  param is Book book
@@ -142,7 +142,7 @@ public class BookViewModel : BaseViewModel
         NavigationBooksCommand = new RelayCommand(
             execute: _ =>
             {
-                _navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, _navigate));
+                _navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, navigate));
             },
             canExecute: _ => true
         );

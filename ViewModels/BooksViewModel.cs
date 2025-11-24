@@ -63,7 +63,7 @@ public class BooksViewModel : BaseViewModel
         NavigationNewBookCommand = new RelayCommand(
             execute: _ =>
             {
-                // _navigate(new NewBookViewModel(_serviceBook, _navigate));
+                _navigate(new NewBookViewModel(_serviceBook, _serviceAuthor, _serviceGenre, _navigate));
             },
             canExecute: _ => true
         );

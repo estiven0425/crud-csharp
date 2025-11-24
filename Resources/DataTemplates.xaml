@@ -8,6 +8,9 @@
     <DataTemplate DataType="{x:Type vm:BooksViewModel}">
         <views:BooksView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:NewBookViewModel}">
+        <views:NewBookView/>
+    </DataTemplate>
     <!-- <DataTemplate DataType="{x:Type vm:BookViewModel}"> -->
     <!--     <views:BookView/> -->
     <!-- </DataTemplate> -->
