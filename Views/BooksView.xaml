@@ -13,30 +13,43 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0"
-                    HorizontalAlignment="Center"
-                    Margin="0,0,0,10"
-                    Orientation="Horizontal">
+        <Grid Grid.Row="0"
+                    Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
             <Button Content="Return"
                     Command="{Binding NavigationMainCommand}"
-                    Width="50"/>
-            <TextBox Height="30"
+                    Grid.Column="0"
+                    Grid.Row="0"/>
+            <TextBox Grid.Column="1"
+                    Grid.ColumnSpan="4"
+                     Grid.Row="0"
+                     Height="30"
                      Margin="10,0"
-                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                     Width="440">
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
             </TextBox>
             <Button Content="Search"
                     Command="{Binding GetBookByTitleCommand}"
-                    Width="50"/>
-        </StackPanel>
-        <StackPanel Grid.Row="1"
-                    HorizontalAlignment="Center"
-                    Margin="0,0,0,10"
-                    Orientation="Horizontal">
+                    Grid.Column="5"
+                    Grid.Row="0"/>
+        </Grid>
+        <Grid Grid.Row="1"
+                    HorizontalAlignment="Stretch"
+                    Margin="0,0,0,10">
             <Button Content="Add book"
-                    Command="{Binding NavigationNewBookCommand}"
-                    Width="560"/>
-        </StackPanel>
+                    Command="{Binding NavigationNewBookCommand}"/>
+        </Grid>
         <Grid Grid.Row="2">
             <ListView ItemsSource="{Binding Books}"
                       SelectedItem="{Binding SelectedBook}">

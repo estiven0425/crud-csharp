@@ -69,7 +69,6 @@ public class MainViewModel : BaseViewModel
 
     public ICommand SelectedSearchCommand { get; set; }
     public ICommand NavigationBooksCommand { get; set; }
-    public ICommand NavigationBookCommand { get; set; }
     public ICommand NavigationAuthorsCommand { get; set; }
     public ICommand NavigationAuthorCommand { get; set; }
     public ICommand NavigationGenresCommand { get; set; }
@@ -138,14 +137,6 @@ public class MainViewModel : BaseViewModel
             execute: _ =>
             {
                 navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, navigate));
-            },
-            canExecute: _ => true
-        );
-
-        NavigationBookCommand = new RelayCommand(
-            execute: _ =>
-            {
-                CurrentView = new BookViewModel(_serviceBook, SelectedBook, _serviceAuthor, _serviceGenre, navigate);
             },
             canExecute: _ => true
         );

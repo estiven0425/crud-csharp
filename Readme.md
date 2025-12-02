@@ -383,40 +383,6 @@ Clase ubicada en `/ViewModels/DTOs` que encapsula los parámetros necesarios par
 - **Validación**: El `Amount` debe ser mayor que cero para operaciones de reabastecimiento y no superar el stock disponible para ventas.
 - **Separación de responsabilidades**: Mantiene la lógica de transporte de datos desacoplada del modelo y del servicio.
 
-##### `AuthorBookRequest.cs`
-
-Clase ubicada en `/ViewModels/DTOs` que encapsula los parámetros necesarios para cambiar el autor de un libro. Se utiliza en el comando `ChangeAuthorBookCommand` dentro del `BookViewModel`.
-
-###### 🧱 Dependencias
-- `Book`: modelo principal de la entidad libro.
-- `Author`: modelo de la entidad autor.
-
-###### 🔧 Propiedades
-- `Book Book`: referencia al libro cuyo autor será modificado.
-- `Author Author`: nuevo autor que se asignará al libro.
-
-###### 🧠 Consideraciones arquitectónicas
-- **Uso en comandos**: Simplifica el paso de datos desde la vista al ViewModel.
-- **Integridad referencial**: El cambio de autor se valida en el servicio y se aplica mediante el método `ChangeAuthor` del modelo `Book`.
-- **Flexibilidad**: Permite reutilizar la misma estructura para cualquier operación que requiera un libro y un autor.
-
-##### `GenreBookRequest.cs`
-
-Clase ubicada en `/ViewModels/DTOs` que encapsula los parámetros necesarios para cambiar el género de un libro. Se utiliza en el comando `ChangeGenreBookCommand` dentro del `BookViewModel`.
-
-###### 🧱 Dependencias
-- `Book`: modelo principal de la entidad libro.
-- `Genre`: modelo de la entidad género.
-
-###### 🔧 Propiedades
-- `Book Book`: referencia al libro cuyo género será modificado.
-- `Genre Genre`: nuevo género que se asignará al libro.
-
-###### 🧠 Consideraciones arquitectónicas
-- **Uso en comandos**: Facilita el transporte de datos entre la vista y el ViewModel.
-- **Integridad referencial**: El cambio de género se valida en el servicio y se aplica mediante el método `ChangeGenre` del modelo `Book`.
-- **Consistencia**: Mantiene la colección `Books` y la propiedad `SelectedBook` sincronizadas con el estado actual.
-
 ### 🗂️ /Views
 
 ### 🗂️ /Helpers

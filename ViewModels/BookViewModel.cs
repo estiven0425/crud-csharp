@@ -16,19 +16,65 @@ public class BookViewModel : BaseViewModel
     private readonly Action<object?> _navigate;
 
     private Book? _selectedBook;
-
     public Book? SelectedBook
     {
         get => _selectedBook;
         private set => SetField(ref _selectedBook,  value);
     }
 
+    private int _stockAmount;
+    public int StockAmount
+    {
+        get => _stockAmount;
+        set
+        {
+            _stockAmount = value;
+
+            OnPropertyChanged();
+
+            CurrentStockRequest = new StockBookRequest { Book = SelectedBook, Amount = _stockAmount };
+        }
+
+    }
+
+    private int _sellAmount;
+    public int SellAmount
+    {
+        get => _sellAmount;
+        set
+        {
+            _sellAmount = value;
+
+            OnPropertyChanged();
+
+            CurrentSellRequest = new StockBookRequest { Book = SelectedBook, Amount = _sellAmount };
+        }
+
+    }
+
+    private StockBookRequest _currentStockRequest;
+    public StockBookRequest CurrentStockRequest
+    {
+        get => _currentStockRequest;
+        private set => SetField(ref _currentStockRequest, value);
+    }
+
+    private StockBookRequest _currentSellRequest;
+    public StockBookRequest CurrentSellRequest
+    {
+        get => _currentSellRequest;
+        private set => SetField(ref _currentSellRequest, value);
+    }
+
+    public ObservableCollection<Author> Authors { get; set; }
+    public ObservableCollection<Genre> Genres { get; set; }
+
+    public string ErrorMessage  { get; set; } = string.Empty;
+
     public ICommand UpdateBookCommand { get; set; }
     public ICommand DeleteBookCommand { get; set; }
     public ICommand RestockBookCommand { get; set; }
     public ICommand SellBookCommand { get; set; }
-    public ICommand ChangeAuthorBookCommand { get; set; }
-    public ICommand ChangeGenreBookCommand { get; set; }
     public ICommand NavigationBooksCommand { get; set; }
 
     public BookViewModel(ServiceBook serviceBook, Book? selectedBook, ServiceAuthor serviceAuthor, ServiceGenre serviceGenre, Action<object> navigate)
@@ -39,6 +85,9 @@ public class BookViewModel : BaseViewModel
         _navigate = navigate;
 
         SelectedBook = selectedBook;
+
+        Authors = new ObservableCollection<Author>(_serviceAuthor.GetAllAuthors());
+        Genres = new ObservableCollection<Genre>(_serviceGenre.GetAllGenres());
 
         UpdateBookCommand = new RelayCommand(
             execute: param =>
@@ -56,6 +105,8 @@ public class BookViewModel : BaseViewModel
 
                         SelectedBook.ChangeAuthor(book.Author);
                         SelectedBook.ChangeGenre(book.Genre);
+
+                        _navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, navigate));
                     }
                 }
             },
@@ -85,6 +136,7 @@ public class BookViewModel : BaseViewModel
                     if (SelectedBook != null)
                     {
                         SelectedBook.Stock = stockBookRequest.Book.Stock;
+                        _navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, navigate));
                     }
                 }
             },
@@ -101,42 +153,11 @@ public class BookViewModel : BaseViewModel
                     if (SelectedBook != null)
                     {
                         SelectedBook.Stock = stockBookRequest.Book.Stock;
+                        _navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, navigate));
                     }
                 }
             },
             canExecute: param => param is StockBookRequest restockBookRequest && !ValidationHelper.IsInvalidNumber(restockBookRequest.Amount)
-        );
-
-        ChangeAuthorBookCommand = new RelayCommand(
-            execute: param =>
-            {
-                if (param is AuthorBookRequest authorBookRequest)
-                {
-                    _serviceBook.ChangeAuthorBook(authorBookRequest.Book, authorBookRequest.Author);
-
-                    if (SelectedBook != null)
-                    {
-                        SelectedBook.ChangeAuthor(authorBookRequest.Author);
-                    }
-                }
-            },
-            canExecute: param => param is AuthorBookRequest authorBookRequest
-        );
-
-        ChangeGenreBookCommand = new RelayCommand(
-            execute: param =>
-            {
-                if (param is GenreBookRequest genreBookRequest)
-                {
-                    _serviceBook.ChangeGenreBook(genreBookRequest.Book, genreBookRequest.Genre);
-
-                    if (SelectedBook != null)
-                    {
-                        SelectedBook.ChangeGenre(genreBookRequest.Genre);
-                    }
-                }
-            },
-            canExecute: param => param is GenreBookRequest genreBookRequest
         );
 
         NavigationBooksCommand = new RelayCommand(

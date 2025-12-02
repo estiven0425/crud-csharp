@@ -22,6 +22,8 @@ public class NewBookViewModel : BaseViewModel
         set => SetField(ref _book, value);
     }
 
+    public string ErrorMessage  { get; set; } = string.Empty;
+
     public ObservableCollection<Author> Authors { get; set; }
     public ObservableCollection<Genre> Genres { get; set; }
 
@@ -43,9 +45,16 @@ public class NewBookViewModel : BaseViewModel
         AddBookCommand = new RelayCommand(
             execute: _ =>
             {
-                _serviceBook.AddBook(Book);
+                try
+                {
+                    _serviceBook.AddBook(Book);
 
-                _navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, _navigate));
+                    _navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, navigate));
+                }
+                catch (Exception e)
+                {
+                    ErrorMessage = e.Message;
+                }
             },
             canExecute: _ =>  true
         );
@@ -54,7 +63,7 @@ public class NewBookViewModel : BaseViewModel
         NavigationBooksCommand = new RelayCommand(
             execute: _ =>
             {
-                _navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, _navigate));
+                _navigate(new BooksViewModel(_serviceBook, _serviceAuthor, _serviceGenre, navigate));
             },
             canExecute: _ => true
         );

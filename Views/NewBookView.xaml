@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid Margin="10"
-          HorizontalAlignment="Stretch">
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -124,20 +123,20 @@
                      Text="{Binding Book.Stock, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         <Grid Grid.Column="0"
-                    Grid.Row="6"
-                    Grid.ColumnSpan="2"
-                    Margin="0,0,0,10"/>
+              Grid.Row="6"
+              Grid.ColumnSpan="2"
+              Margin="0,0,0,10">
+            <TextBlock Text="{Binding ErrorMessage}"/>
+        </Grid>
         <Button Grid.Column="0"
                 Grid.Row="7"
                 Content="Back"
                 Command="{Binding NavigationBooksCommand}"
-                Margin="0,0,5,0"
-                Width="275"/>
+                Margin="0,0,5,0"/>
         <Button Grid.Column="1"
                 Grid.Row="7"
                 Content="Add book"
                 Command="{Binding AddBookCommand}"
-                Margin="5,0,0,0"
-                Width="275"/>
+                Margin="5,0,0,0"/>
     </Grid>
 </UserControl>
